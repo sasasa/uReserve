@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use App\Services\EventService;
 class StoreEventRequest extends FormRequest
 {
     /**
@@ -32,5 +32,18 @@ class StoreEventRequest extends FormRequest
             'max_people' => ['required', 'numeric', 'between:1,20'],
             'is_visible' => ['required', 'boolean']
         ];
+    }
+
+    public function withValidator($validator) {
+        if ($validator->fails()) return;
+        $validator->after(function ($validator) {
+            $eventService = app()->make(EventService::class);
+            $check = $eventService->checkEventDuplication(
+                $this['event_date'], $this['start_time'], $this['end_time']
+            );
+            if($check){
+                $validator->errors()->add('時間', 'この時間帯は既に他の予約が存在します。');
+            }
+        });
     }
 }

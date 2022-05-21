@@ -83,12 +83,12 @@
                 </thead>
                 <tbody>
                   @foreach($reservations as $reservation)
-                    @if(is_null($reservation['canceled_date']))
+                    @if(is_null($reservation->canceled_date))
                       <tr>
                         <td class="px-4 py-3">
-                          {{ $reservation['name'] }}
+                          {{ $reservation->name }}
                         </td>
-                        <td class="px-4 py-3">{{ $reservation['number_of_people']}}</td>
+                        <td class="px-4 py-3">{{ $reservation->number_of_people }}</td>
                       </tr>
                     @endif
                   @endforeach

@@ -145,6 +145,7 @@ return [
         'end_time' => '終了時間',
         'start_time' => '開始時間',
         'max_people' => '定員',
+        'is_visible' => '表示非表示',
         
     ],
 ];

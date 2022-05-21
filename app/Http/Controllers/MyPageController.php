@@ -13,8 +13,7 @@ use Carbon\Carbon;
 class MyPageController extends Controller
 {
     public function index(MyPageService $myPageService){
-        $user = Auth::user();
-        $events = $user->events;
+        $events = Auth::user()->events;
         $fromTodayEvents = $myPageService->reservedEvent($events, 'fromToday');
         $pastEvents = $myPageService->reservedEvent($events, 'past');
 

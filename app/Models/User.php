@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Event;
+use App\Models\ReservedInfo;
 
 class User extends Authenticatable
 {
@@ -64,5 +65,14 @@ class User extends Authenticatable
     public function events()
     {
         return $this->belongsToMany(Event::class, 'reservations')->withPivot('id', 'number_of_people', 'canceled_date');
-    } 
+    }
+
+    public function reservedInfo()
+    {
+        $reservedInfo = new ReservedInfo();
+        $reservedInfo->name = $this->name;
+        $reservedInfo->number_of_people = $this->pivot->number_of_people;
+        $reservedInfo->canceled_date = $this->pivot->canceled_date;
+        return $reservedInfo;
+    }
 }

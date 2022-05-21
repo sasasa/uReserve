@@ -7,6 +7,21 @@ use App\Models\Reservation;
 
 class EventService
 {
+    public function saveJoinDateAndTime(array $request, Event $model = new Event())
+    {
+        $startDate = $this->joinDateAndTime($request['event_date'], $request['start_time']);
+        $endDate = $this->joinDateAndTime($request['event_date'], $request['end_time']); 
+        $model->fill([
+            'name' => $request['event_name'],
+            'information' => $request['information'],
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'max_people' => $request['max_people'],
+            'is_visible' => $request['is_visible'],
+        ]);
+        return $model->save() ? $model : null;
+    }
+    
     public function getWeekEvents($startDate, $endDate)
     {
         $reservedPeople = DB::table('reservations')
@@ -19,6 +34,7 @@ class EventService
             $join->on('events.id', '=', 'reservedPeople.event_id');
             })
         ->whereBetween('start_date', [$startDate, $endDate])
+        ->where('is_visible', true)
         ->orderBy('start_date', 'asc')
         ->get();
     }
