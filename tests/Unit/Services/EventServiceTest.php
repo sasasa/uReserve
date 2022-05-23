@@ -154,7 +154,7 @@ class EventServiceTest extends TestCase
             'end_date' => '2022-03-16 13:00:00',
             'is_visible' => true,
         ]);
-        $isDuplicate = $this->service->checkEventDuplication('2022-03-16', '13:00', '14:00');
+        $isDuplicate = $this->service->checkEventDuplication('2022-03-16', '13:30', '14:00');
         $this->assertSame(false, $isDuplicate);
     }
 

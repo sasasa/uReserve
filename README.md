@@ -58,6 +58,7 @@ sail artisan make:Controller MyPageController
 sail artisan make:request ReservationRequest
 
 sail artisan make:test Services/EventServiceTest --unit
+sail test tests/Unit/Services/EventServiceTest.php 
 -->
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
