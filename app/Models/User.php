@@ -11,7 +11,6 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Event;
 use App\Models\ReservedInfo;
-
 class User extends Authenticatable
 {
     use HasApiTokens;

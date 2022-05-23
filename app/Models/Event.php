@@ -11,6 +11,8 @@ use App\Models\Reservation;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\DB;
 use App\Services\EventService;
+use Illuminate\Support\Collection;
+
 class Event extends Model
 {
     use HasFactory;
@@ -29,14 +31,14 @@ class Event extends Model
         return $this->belongsToMany(User::class, 'reservations')->withPivot('id', 'number_of_people', 'canceled_date');
     }
 
-    public function reservations()
+    public function reservations(): Collection
     {
-        $reservations = [];
+        $reservations = collect();
         foreach($this->users as $user)
         {
-            array_push($reservations, $user->reservedInfo());
+            $reservations->push($user->reservedInfo());
         }
-        return collect($reservations);
+        return $reservations;
     }
 
     public function scopeWithNumberOfPeople($query)
