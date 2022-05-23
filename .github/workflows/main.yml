@@ -75,11 +75,11 @@ jobs:
         run: ./vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
 
       - name: Run Laravel Server
-        run: php artisan serve > /dev/null 2>&1 &
+        run: php artisan serve --env=dusk.local > /dev/null 2>&1 &
 
       - name: Run Dusk Tests
         run: |
           chmod -R 0755 vendor/laravel/dusk/bin/
-          php artisan dusk --env=local
+          php artisan dusk --env=dusk.local
         env:
           APP_URL: http://127.0.0.1:8000
