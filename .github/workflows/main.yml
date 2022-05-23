@@ -57,12 +57,12 @@ jobs:
         shell: bash -xe {0} 
         run: composer dump-autoload
 
-      - name: migrate #DB作成
-        shell: bash -xe {0} 
-        run: php artisan migrate --force
-
       - name: Set hostname
         run: sudo echo "127.0.0.1 mysql.test" | sudo tee -a /etc/hosts
+
+      - name: migrate #DB作成
+        shell: bash -xe {0} 
+        run: php artisan migrate --force --env=testing
 
       - name: unit test #テスト実行
         shell: bash -xe {0} 
