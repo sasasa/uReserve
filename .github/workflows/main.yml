@@ -15,7 +15,7 @@ jobs:
     #DB側（MySQLコンテナ）設定
     services:
       mysql: 
-        image: mysql:8.0.19
+        image: mysql/mysql-server:8.0
         ports:
           - 3306:3306
         env:  
