@@ -7,7 +7,7 @@ use App\Models\Reservation;
 
 class ReservationService
 {
-    public function getResevablePeople(Event $event)
+    public function getResevablePeople(Event $event): int
     {
         $reservedPeople = Reservation::noneCanceleNumberOfPeople($event->id)->first();
 
@@ -19,11 +19,11 @@ class ReservationService
         return $resevablePeople;
     }
 
-    public function canReserve(Event $event, int $reserved_people)
+    public function canReserve(Event $event, int $add_number_people): bool
     {
         $reservedPeople = Reservation::noneCanceleNumberOfPeople($event->id)->first();
 
-        return (is_null($reservedPeople) || $event->max_people >= $reservedPeople->number_of_people + $reserved_people);
+        return (is_null($reservedPeople) || $event->max_people >= $reservedPeople->number_of_people + $add_number_people);
     }
     
 }
