@@ -44,8 +44,8 @@ class EventController extends Controller
     {
         $eventService->saveJoinDateAndTime($request->all());
 
-        session()->flash("status", "登録okです");
-        return to_route("events.index");//名前付きルート
+        // session()->flash("status", "登録okです");
+        return to_route("events.index")->with("status", "登録okです");
     }
 
     /**
@@ -82,8 +82,8 @@ class EventController extends Controller
     {
         $eventService->saveJoinDateAndTime($request->all(), $event);
 
-        session()->flash("status", "更新しました。");
-        return to_route("events.index");//名前付きルート
+        // session()->flash("status", "更新しました。");
+        return to_route("events.index")->with("status", "更新しました。");
     }
 
     /**

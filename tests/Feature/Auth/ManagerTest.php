@@ -83,6 +83,7 @@ class ManagerTest extends TestCase
             ]);
         if($result === 'success') {
             $response->assertRedirect(route('events.index'));
+            $response->assertSessionHas('status');
             $this->assertDatabaseHas('events', [
                 'id' => $event->id,
                 'name' => $event_name,
@@ -138,6 +139,7 @@ class ManagerTest extends TestCase
             ]);
         if($result === 'success') {
             $response->assertRedirect(route('events.index'));
+            $response->assertSessionHas('status');
             $this->assertDatabaseHas('events', [
                 'name' => $event_name,
                 'information' => $information,
