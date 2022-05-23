@@ -72,7 +72,8 @@ sail test tests/Feature/Auth/ManagerTest.php
 
 sail composer require --dev laravel/dusk
 sail artisan dusk:install
-sail dusk
+sail dusk --env=dusk.local
+
 -->
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>

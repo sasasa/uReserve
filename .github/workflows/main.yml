@@ -80,7 +80,7 @@ jobs:
       - name: Run Dusk Tests
         run: |
           chmod -R 0755 vendor/laravel/dusk/bin/
-          php artisan dusk
+          php artisan dusk --env=dusk.local
         env:
           APP_ENV: local
           APP_URL: http://127.0.0.1:8000
