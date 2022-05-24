@@ -113,4 +113,60 @@ class ExampleTest extends DuskTestCase
                     ->assertSee($endOfMonthJp);
         });
     }
+
+    /**
+     * A basic browser test example.
+     * @test
+     * @return void
+     */
+    public function test_2人が同一イベントに同時に申し込んだときに定員を超えないこと()
+    {
+        $that = $this;
+        $this->browse(function (Browser $first, Browser $second) use($that) {
+            $event = Event::factory()->create([
+                'start_date' => Carbon::now()->addDays(3)->setHour(13)->setMinute(30)->format('Y-m-d H:i:00'),
+                'end_date' => Carbon::now()->addDays(3)->setHour(13)->setMinute(30)->addHours(2)->format('Y-m-d H:i:00'),
+                'is_visible' => true,
+            ]);
+            $user1 = User::factory()->create();
+            $user2 = User::factory()->create();
+            $that->assertDatabaseHas('events', [
+                'start_date' => Carbon::now()->addDays(3)->setHour(13)->setMinute(30)->format('Y-m-d H:i:00'),
+                'end_date' => Carbon::now()->addDays(3)->setHour(13)->setMinute(30)->addHours(2)->format('Y-m-d H:i:00'),
+                'is_visible' => 1,
+            ]);
+            // アクセスして予約ページを開いた状態
+            $second->loginAs(User::find($user2->id))
+                    ->visit('/dashboard')
+                    ->waitForText($event->name)
+                    ->clickLink($event->name)
+                    ->assertPathIs("/{$event->id}")
+                    ->assertSee($event->name)
+                    ->assertSee($event->information);
+
+            // 僅差でmax-1人の予約をした
+            $first->loginAs(User::find($user1->id))
+                    ->visit('/dashboard')
+                    ->waitForText($event->name)
+                    ->clickLink($event->name)
+                    ->assertPathIs("/{$event->id}")
+                    ->assertSee($event->name)
+                    ->assertSee($event->information)
+                    ->select('reserved_people', $event->max_people - 1)
+                    ->press('予約する')
+                    ->assertPathIs("/dashboard")
+                    ->assertSee('登録OKです');
+
+            // max-1人の予約をしたら予約数チェックに引っ掛かる
+            $second->select('reserved_people', $event->max_people - 1)
+                    ->press('予約する')
+                    ->assertPathIs("/{$event->id}")
+                    // 人数制限に引っ掛かる
+                    ->assertSee('この人数は予約できません。')
+                    ->select('reserved_people', 1)
+                    ->press('予約する')
+                    ->assertPathIs("/dashboard")
+                    ->assertSee('登録OKです');
+        });
+    }
 }
