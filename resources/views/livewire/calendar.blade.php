@@ -9,6 +9,7 @@
         name="calendar"
         value="{{ $currentDate }}"
         wire:change="getDate($event.target.value)"
+        readonly
     />
     <div class="flex mx-auto">
         <x-calendar-time />

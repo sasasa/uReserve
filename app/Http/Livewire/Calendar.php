@@ -15,9 +15,9 @@ class Calendar extends Component
 
     public function getDate($date, EventService $eventService)
     {
-        $this->currentDate = CarbonImmutable::parse($date);
+        $this->currentDate = CarbonImmutable::parse($date)->format('Y-m-d');
         $this->events = $eventService->getWeekEvents(
-            $this->currentDate->format('Y-m-d'),
+            $this->currentDate,
             CarbonImmutable::parse($date)->addDays(7)->format('Y-m-d')
         );
 
@@ -37,9 +37,9 @@ class Calendar extends Component
 
     public function mount(EventService $eventService)
     {
-        $this->currentDate = CarbonImmutable::today();
+        $this->currentDate = CarbonImmutable::today()->format('Y-m-d');
         $this->events = $eventService->getWeekEvents(
-            $this->currentDate->format('Y-m-d'),
+            $this->currentDate,
             CarbonImmutable::today()->addDays(7)->format('Y-m-d')
         );
 

@@ -24,7 +24,7 @@ class ExampleTest extends DuskTestCase
      * @test
      * @return void
      */
-    public function test_トップページアクセス()
+    public function test_ログインして予約して再度予約できないことを確認した後キャンセルする()
     {
         $that = $this;
         $this->browse(function (Browser $browser) use($that) {
@@ -45,6 +45,7 @@ class ExampleTest extends DuskTestCase
                     ->assertSee('日付を選択してください。本日から最大30日先まで選択可能です。')
                     ->waitForText($event->name)
                     ->clickLink($event->name)
+                    // ログインせずに予約機能にアクセスするとlogin画面に飛ばされる
                     ->assertPathIs('/login')
                     ->type('email', $user->email)
                     ->type('password', 'password')
@@ -54,6 +55,7 @@ class ExampleTest extends DuskTestCase
                     ->assertSee($event->information)
                     ->select('reserved_people', '1')
                     ->press('予約する')
+                    // 予約できている
                     ->assertPathIs("/dashboard")
                     ->assertSee('登録OKです')
                     ->waitForText($event->name)
@@ -62,6 +64,7 @@ class ExampleTest extends DuskTestCase
                     ->assertSee($event->name)
                     ->assertSee($event->information)
                     ->assertSee('このイベントは既に予約済みです。')
+                    // 予約済みの確認後マイページから予約を確認する
                     ->clickLink('マイページ')
                     ->assertPathIs("/mypage")
                     ->assertSee($event->name)
@@ -72,6 +75,42 @@ class ExampleTest extends DuskTestCase
                     ->clickLink('キャンセルする')->acceptDialog()
                     ->assertPathIs("/dashboard")
                     ->assertSee('キャンセルできました');
+        });
+    }
+
+    /**
+     * A basic browser test example.
+     * @test
+     * @return void
+     */
+    public function test_ログインしてカレンダーを月末に操作する()
+    {
+        $that = $this;
+        $this->browse(function (Browser $browser) use($that) {
+            $event = Event::factory()->create([
+                'start_date' => Carbon::now()->addDays(3)->setHour(13)->setMinute(30)->format('Y-m-d H:i:00'),
+                'end_date' => Carbon::now()->addDays(3)->setHour(13)->setMinute(30)->addHours(2)->format('Y-m-d H:i:00'),
+                'is_visible' => true,
+            ]);
+            $user = User::factory()->create();
+            $that->assertDatabaseHas('events', [
+                'start_date' => Carbon::now()->addDays(3)->setHour(13)->setMinute(30)->format('Y-m-d H:i:00'),
+                'end_date' => Carbon::now()->addDays(3)->setHour(13)->setMinute(30)->addHours(2)->format('Y-m-d H:i:00'),
+                'is_visible' => 1,
+            ]);
+            $endOfMonth = Carbon::now()->setDay(31)->format('n月 d, Y');
+            $endOfMonthJp = Carbon::now()->setDay(31)->format('m月d日');
+            $browser->visit('/login')
+                    ->type('email', $user->email)
+                    ->type('password', 'password')
+                    ->press('ログイン')
+                    ->assertPathIs('/dashboard')
+                    ->click('#calendar')
+                    ->assertFocused('#calendar')
+                    // カレンダーから月末を選択する
+                    ->click("span[aria-label='{$endOfMonth}']")
+                    ->waitForText($endOfMonthJp)
+                    ->assertSee($endOfMonthJp);
         });
     }
 }
