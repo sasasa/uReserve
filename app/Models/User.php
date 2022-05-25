@@ -68,10 +68,10 @@ class User extends Authenticatable
 
     public function reservedInfo(): ReservedInfo
     {
-        $reservedInfo = new ReservedInfo();
-        $reservedInfo->name = $this->name;
-        $reservedInfo->number_of_people = $this->pivot->number_of_people;
-        $reservedInfo->canceled_date = $this->pivot->canceled_date;
-        return $reservedInfo;
+        return new ReservedInfo(
+            $this->name,
+            $this->pivot->number_of_people,
+            $this->pivot->canceled_date,
+        );
     }
 }

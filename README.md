@@ -72,8 +72,19 @@ sail test tests/Feature/Auth/ManagerTest.php
 
 sail composer require --dev laravel/dusk
 sail artisan dusk:install
-sail dusk --env=dusk.local
+sail dusk
 
+sail composer require --dev phpunit/php-code-coverage
+sail composer test:coverage-html
+
+sail artisan make:test Controller/EventControllerTest
+sail test tests/Feature/Controller/EventControllerTest.php
+
+sail artisan make:test Controller/MyPageControllerTest
+sail test tests/Feature/Controller/MyPageControllerTest.php
+
+sail artisan make:test Controller/ReservationControllerTest
+sail test tests/Feature/Controller/ReservationControllerTest.php
 -->
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>

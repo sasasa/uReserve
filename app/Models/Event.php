@@ -26,6 +26,11 @@ class Event extends Model
         'is_visible',
     ];
 
+    protected $casts = [
+        'start_date' => 'datetime:Y-m-d H:i:00',
+        'end_date' => 'datetime:Y-m-d H:i:00',
+    ];
+
     public function users()
     {
         return $this->belongsToMany(User::class, 'reservations')->withPivot('id', 'number_of_people', 'canceled_date');

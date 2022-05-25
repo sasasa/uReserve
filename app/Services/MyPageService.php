@@ -13,12 +13,13 @@ class MyPageService
         if($string === 'fromToday') { 
             foreach($events->sortBy('start_date') as $event) {
                 if(is_null($event->pivot->canceled_date) && $event->start_date >= Carbon::now()->format('Y-m-d 00:00:00')) {
-                    $eventInfo = new EventInfo();
-                    $eventInfo->id = $event->id;
-                    $eventInfo->name = $event->name;
-                    $eventInfo->start_date = $event->start_date;
-                    $eventInfo->end_date = $event->end_date;
-                    $eventInfo->number_of_people = $event->pivot->number_of_people;
+                    $eventInfo = new EventInfo(
+                        $event->id,
+                        $event->name,
+                        $event->start_date,
+                        $event->end_date,
+                        $event->pivot->number_of_people
+                    );
                     $reservedEvents->push($eventInfo);
                 }
             }
@@ -26,12 +27,13 @@ class MyPageService
         else if($string === 'past'){
             foreach($events->sortByDesc('start_date') as $event) {
                 if(is_null($event->pivot->canceled_date) && $event->start_date < Carbon::now()->format('Y-m-d 00:00:00')){
-                    $eventInfo = new EventInfo();
-                    $eventInfo->id = $event->id;
-                    $eventInfo->name = $event->name;
-                    $eventInfo->start_date = $event->start_date;
-                    $eventInfo->end_date = $event->end_date;
-                    $eventInfo->number_of_people = $event->pivot->number_of_people;
+                    $eventInfo = new EventInfo(
+                        $event->id,
+                        $event->name,
+                        $event->start_date,
+                        $event->end_date,
+                        $event->pivot->number_of_people
+                    );
                     $reservedEvents->push($eventInfo);
                 }
             }

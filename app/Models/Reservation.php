@@ -16,6 +16,10 @@ class Reservation extends Model
         'number_of_people',
     ];
 
+    protected $casts = [
+        'canceled_date' => 'datetime:Y-m-d H:i:00'
+    ];
+
     public function scopeLatestMine($query, int $eventId)
     {
         return $query->where('user_id', '=', Auth::id())

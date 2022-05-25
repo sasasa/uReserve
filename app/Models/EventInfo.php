@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-
+use Carbon\Carbon;
 
 class EventInfo
 {
-    public $id;
-    public $name;
-    public $start_date;
-    public $end_date;
-    public $number_of_people;
+    public function __construct(
+        public int $id,
+        public string $name,
+        public Carbon $start_date,
+        public Carbon $end_date,
+        public int $number_of_people
+    ) {}
 }
