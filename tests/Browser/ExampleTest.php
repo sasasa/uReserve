@@ -16,7 +16,7 @@ class ExampleTest extends DuskTestCase
     public function setUp(): void
     {
         parent::setUp();
-        Artisan::call('migrate:refresh');
+        Artisan::call('migrate:fresh');
     }
 
     /**

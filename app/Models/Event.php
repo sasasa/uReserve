@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\ReservedInfo;
 use App\Models\Reservation;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +37,9 @@ class Event extends Model
         return $this->belongsToMany(User::class, 'reservations')->withPivot('id', 'number_of_people', 'canceled_date');
     }
 
+    /**
+     * @return Collection<ReservedInfo>
+     */
     public function reservations(): Collection
     {
         $reservations = collect();

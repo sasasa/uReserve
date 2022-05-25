@@ -66,6 +66,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Event::class, 'reservations')->withPivot('id', 'number_of_people', 'canceled_date');
     }
 
+    /**
+     * @return ReservedInfo
+     */
     public function reservedInfo(): ReservedInfo
     {
         return new ReservedInfo(
