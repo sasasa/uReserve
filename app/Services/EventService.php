@@ -10,7 +10,7 @@ class EventService
     public function saveJoinDateAndTime(array $request, Event $model = new Event())
     {
         $startDate = $this->joinDateAndTime($request['event_date'], $request['start_time']);
-        $endDate = $this->joinDateAndTime($request['event_date'], $request['end_time']); 
+        $endDate = $this->joinDateAndTime($request['event_date'], $request['end_time']);
         $model->fill([
             'name' => $request['event_name'],
             'information' => $request['information'],
