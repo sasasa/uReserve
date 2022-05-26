@@ -12,7 +12,7 @@ class Register extends Component
 {
     use WithPagination;
     
-    public int $cnt = 2;
+    public int $cnt = 1;
     public User $user;
     public string $text_1;
     public string $text_2;
@@ -76,6 +76,7 @@ class Register extends Component
     
     public function register()
     {
+        // dd($this->user);
         $this->validate();
 
         $this->user->fill([
@@ -87,6 +88,7 @@ class Register extends Component
 
         session()->flash("message", "登録okです");
         $this->create();
+        $this->resetPage();
         // $this->emit('refresh');
         // return to_route("livewire-test.index");// Laravel9新機能
     }

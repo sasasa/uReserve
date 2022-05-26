@@ -9,21 +9,31 @@
         <input id="search" type="text" wire:model.debounce.400ms="search">
     </div>
     <button wire:click="create">+新規作成する</button>
-    <form wire:submit.prevent="register">{{-- //ページ読み込みを防ぐ --}}
-        <label for="user.name">名前</label>
-        <input id="user.name" type="text" wire:model.debounce.400ms="user.name"><br>
+    
+    <form wire:submit.prevent="register" novalidate>
+        <div>
+            {{-- dummy autocomp対策 --}}
+            <input type="email" name="email" style="visibility: hidden;" >
+            <input type="password" name="password" style="visibility: hidden;" >
+        </div>
+
+        <label>名前
+            <input type="text" wire:model.debounce.400ms="user.name" >
+        </label><br>
         @error('user.name') <div class="text-red-500">{{ $message }}</div> @enderror
 
-        <label for="user.email">メールアドレス</label>
-        <input id="user.email" type="email" wire:model.debounce.400ms="user.email"><br>
+        <label>メールアドレス
+            <input type="text" inputmode="email" wire:model.debounce.400ms="user.email">
+        </label><br>
         @error('user.email') <div class="text-red-500">{{ $message }}</div> @enderror
 
-        <label for="user.password">パスワード</label>
-        <input id="user.password" type="password" wire:model.debounce.400ms="user.password">
+        <label>パスワード
+            <input type="password" wire:model.debounce.400ms="user.password" >
+        </label><br>
         @error('user.password') <div class="text-red-500">{{ $message }}</div> @enderror
 
         @for($i = 1; $i < $cnt; $i++)
-        <p>自由入力欄<input type="text" wire:model.debounce.400ms="text_{{ $i }}" value=""></p>
+        <p><label>自由入力欄<input type="text" wire:model.debounce.400ms="text_{{ $i }}" value=""></label></p>
         @error("text_{$i}") <div class="text-red-500">{{ $message }}</div> @enderror
         @endfor
         <p><button wire:click="add">add</button></p>
