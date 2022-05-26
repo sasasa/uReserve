@@ -85,6 +85,13 @@ sail test tests/Feature/Controller/MyPageControllerTest.php
 
 sail artisan make:test Controller/ReservationControllerTest
 sail test tests/Feature/Controller/ReservationControllerTest.php
+
+sail composer require --dev barryvdh/laravel-ide-helper
+sail artisan ide-helper:model --nowrite
+sail artisan ide-helper:generate
+sail artisan ide-helper:meta
+sail composer update
+
 -->
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
