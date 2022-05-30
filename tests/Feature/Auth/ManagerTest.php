@@ -17,10 +17,10 @@ class ManagerTest extends TestCase
      * @test
      * @return void
      */
-    public function test_ログインせずにアクセスすると403()
+    public function test_ログインせずにアクセスするとログインページにリダイレクト()
     {
         $response = $this->get(route('events.index'));
-        $response->assertStatus(403);
+        $response->assertRedirect(route('login'));
     }
 
     /**

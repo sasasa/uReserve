@@ -19,10 +19,10 @@ class ReservationControllerTest extends TestCase
      * @test
      * @return void
      */
-    public function dashboard_ログインせずアクセスるとアクセスできない()
+    public function dashboard_ログインせずアクセスるとログインページにリダイレクト()
     {
         $response = $this->get(route('dashboard'));
-        $response->assertStatus(403);
+        $response->assertRedirect(route('login'));
     }
 
     /**

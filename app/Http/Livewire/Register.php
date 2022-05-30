@@ -133,7 +133,7 @@ class Register extends Component
             'users' => User::
                 where('name', 'like', '%'.$this->search.'%')->
                 orWhere('email', 'like', '%'.$this->search.'%')->
-                paginate(1),
+                paginate(3),
         ]);
     }
 }

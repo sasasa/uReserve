@@ -18,26 +18,26 @@
         </div>
 
         <label>名前
-            <input type="text" wire:model.debounce.400ms="user.name" >
+            <input dusk="name" type="text" wire:model.debounce.400ms="user.name" >
         </label><br>
-        @error('user.name') <div class="text-red-500">{{ $message }}</div> @enderror
+        @error('user.name') <div dusk="error_name" class="text-red-500">{{ $message }}</div> @enderror
 
         <label>メールアドレス
-            <input type="text" inputmode="email" wire:model.debounce.400ms="user.email">
+            <input dusk="email" type="text" inputmode="email" wire:model.debounce.400ms="user.email">
         </label><br>
-        @error('user.email') <div class="text-red-500">{{ $message }}</div> @enderror
+        @error('user.email') <div dusk="error_email" class="text-red-500">{{ $message }}</div> @enderror
 
         <label>パスワード
-            <input type="password" wire:model.debounce.400ms="user.password" >
+            <input dusk="password" type="password" wire:model.debounce.400ms="user.password" >
         </label><br>
-        @error('user.password') <div class="text-red-500">{{ $message }}</div> @enderror
+        @error('user.password') <div dusk="error_password" class="text-red-500">{{ $message }}</div> @enderror
 
         @for($i = 1; $i < $cnt; $i++)
         <p><label>自由入力欄<input type="text" wire:model.debounce.400ms="text_{{ $i }}" value=""></label></p>
         @error("text_{$i}") <div class="text-red-500">{{ $message }}</div> @enderror
         @endfor
-        <p><button wire:click="add">add</button></p>
-        <p><button wire:click="del">del</button></p>
+        <p><button wire:click.prevent="add">add</button></p>
+        <p><button wire:click.prevent="del">del</button></p>
 
         @if($user->exists)
             <button type="submit" class="bg-blue-700 text-blue-50 p-2 rounded">変更する</button>
@@ -54,17 +54,19 @@
         </thead>
         <tbody>
         @foreach($users as $user)
-            <tr>
+            <tr wire:key="{{ $user->id }}" dusk="row_{{ $user->id }}">
                 <td class="border px-2 py-1">{{ $user->name }}</td>
                 <td class="border px-2 py-1 text-right">
                     <button
                         type="button"
+                        dusk="update_btn_{{ $user->id }}"
                         class="bg-yellow-500 text-yellow-50 rounded p-2 text-xs"
                         wire:click="$emit('edit', {{ $user->id }})">
                         変更
                     </button>
                     <button
                         type="button"
+                        dusk="delete_btn_{{ $user->id }}"
                         class="bg-red-600 text-red-50 rounded p-2 text-xs"
                         onClick="onDelete({{ $user->id }})">
                         削除
