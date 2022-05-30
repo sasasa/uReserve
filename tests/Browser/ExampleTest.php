@@ -136,7 +136,7 @@ class ExampleTest extends DuskTestCase
                 'is_visible' => 1,
             ]);
             // アクセスして予約ページを開いた状態
-            $second->loginAs(User::find($user2->id))
+            $second->loginAs($user2)
                     ->visit('/dashboard')
                     ->waitForText($event->name)
                     ->clickLink($event->name)
@@ -145,7 +145,7 @@ class ExampleTest extends DuskTestCase
                     ->assertSee($event->information);
 
             // 僅差でmax-1人の予約をした
-            $first->loginAs(User::find($user1->id))
+            $first->loginAs($user1)
                     ->visit('/dashboard')
                     ->waitForText($event->name)
                     ->clickLink($event->name)
