@@ -80,7 +80,7 @@ class Event extends Model
     protected function editStartTime(): Attribute
     { 
         return new Attribute(
-            get: fn() => Carbon::parse($this->start_date)->format('H:i')
+            get: fn () => Carbon::parse($this->start_date)->format('H:i')
         );
     }
     protected function editEndTime(): Attribute
