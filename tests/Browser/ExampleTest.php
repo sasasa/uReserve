@@ -98,8 +98,8 @@ class ExampleTest extends DuskTestCase
                 'end_date' => Carbon::now()->addDays(3)->setHour(13)->setMinute(30)->addHours(2)->format('Y-m-d H:i:00'),
                 'is_visible' => 1,
             ]);
-            $endOfMonth = Carbon::now()->setDay(31)->format('n月 d, Y');
-            $endOfMonthJp = Carbon::now()->setDay(31)->format('m月d日');
+            $endOfMonth = Carbon::now()->lastOfMonth()->format('n月 d, Y');
+            $endOfMonthJp = Carbon::now()->lastOfMonth()->format('m月d日');
             $browser->visit('/login')
                     ->type('email', $user->email)
                     ->type('password', 'password')
