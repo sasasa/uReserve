@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -53,18 +52,18 @@ class UserFactory extends Factory
      *
      * @return $this
      */
-    public function withPersonalTeam()
-    {
-        if (! Features::hasTeamFeatures()) {
-            return $this->state([]);
-        }
+    // public function withPersonalTeam()
+    // {
+    //     if (! Features::hasTeamFeatures()) {
+    //         return $this->state([]);
+    //     }
 
-        return $this->has(
-            Team::factory()
-                ->state(function (array $attributes, User $user) {
-                    return ['name' => $user->name.'\'s Team', 'user_id' => $user->id, 'personal_team' => true];
-                }),
-            'ownedTeams'
-        );
-    }
+    //     return $this->has(
+    //         Team::factory()
+    //             ->state(function (array $attributes, User $user) {
+    //                 return ['name' => $user->name.'\'s Team', 'user_id' => $user->id, 'personal_team' => true];
+    //             }),
+    //         'ownedTeams'
+    //     );
+    // }
 }

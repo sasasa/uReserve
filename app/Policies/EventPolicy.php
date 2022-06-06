@@ -16,10 +16,10 @@ class EventPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
-    {
-        //
-    }
+    // public function viewAny(User $user)
+    // {
+    //     //
+    // }
 
     /**
      * Determine whether the user can view the model.
@@ -28,10 +28,10 @@ class EventPolicy
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Event $event)
-    {
-        //
-    }
+    // public function view(User $user, Event $event)
+    // {
+    //     //
+    // }
 
     /**
      * Determine whether the user can create models.
@@ -39,10 +39,10 @@ class EventPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
-    {
-        //
-    }
+    // public function create(User $user)
+    // {
+    //     //
+    // }
 
     /**
      * Determine whether the user can update the model.
@@ -51,10 +51,10 @@ class EventPolicy
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Event $event)
-    {
-        //
-    }
+    // public function update(User $user, Event $event)
+    // {
+    //     //
+    // }
 
     /**
      * Determine whether the user can delete the model.
@@ -63,10 +63,10 @@ class EventPolicy
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Event $event)
-    {
-        //
-    }
+    // public function delete(User $user, Event $event)
+    // {
+    //     //
+    // }
 
     /**
      * Determine whether the user can restore the model.
@@ -75,10 +75,10 @@ class EventPolicy
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Event $event)
-    {
-        //
-    }
+    // public function restore(User $user, Event $event)
+    // {
+    //     //
+    // }
 
     /**
      * Determine whether the user can permanently delete the model.
@@ -87,8 +87,8 @@ class EventPolicy
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Event $event)
-    {
-        //
-    }
+    // public function forceDelete(User $user, Event $event)
+    // {
+    //     //
+    // }
 }
