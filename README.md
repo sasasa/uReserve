@@ -99,7 +99,7 @@ sail dusk:fails tests/Browser/Livewire/RegisterTest.php
 sail dusk:fails tests/Browser/ExampleTest.php
 
 sail composer require --dev nunomaduro/larastan
-sail php ./vendor/bin/phpstan analyse
+sail php ./vendor/bin/phpstan --memory-limit=1G analyse
 sail php ./vendor/bin/phpstan analyse --generate-baseline
 
 -->

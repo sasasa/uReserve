@@ -10,4 +10,5 @@ parameters:
         - database
         - resources/views
         - routes
+        - tests
     level: 0
