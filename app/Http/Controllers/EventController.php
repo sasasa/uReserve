@@ -13,6 +13,9 @@ use App\Services\EventService;
 
 class EventController extends Controller
 {
+    public function __construct(private EventService $eventService)
+    {
+    }
     /**
      * Display a listing of the resource.
      *
@@ -40,9 +43,9 @@ class EventController extends Controller
      * @param  \App\Http\Requests\StoreEventRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreEventRequest $request, EventService $eventService)
+    public function store(StoreEventRequest $request)
     {
-        $eventService->saveJoinDateAndTime($request->all());
+        $this->eventService->saveJoinDateAndTime($request->all());
 
         // session()->flash("status", "登録okです");
         return to_route("events.index")->with("status", "登録okです");
@@ -78,9 +81,9 @@ class EventController extends Controller
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateEventRequest $request, Event $event, EventService $eventService)
+    public function update(UpdateEventRequest $request, Event $event)
     {
-        $eventService->saveJoinDateAndTime($request->all(), $event);
+        $this->eventService->saveJoinDateAndTime($request->all(), $event);
 
         // session()->flash("status", "更新しました。");
         return to_route("events.index")->with("status", "更新しました。");

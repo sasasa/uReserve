@@ -49,7 +49,6 @@ Route::middleware(['auth', 'can:user-higher'])->group(function(){
     Route::get('/mypage/{event}', [MyPageController::class, 'show'])->name('mypage.show');
     Route::post('/mypage/{event}', [MyPageController::class, 'cancel'])->name('mypage.cancel');
     Route::get('/dashboard', [ReservationController::class, 'dashboard' ])->name('dashboard');
-    // Route::get('/{event}', [ReservationController::class, 'detail'] )->name('events.detail');
     Route::post('/{event}', [ReservationController::class, 'reserve'] )->name('events.reserve');
     Route::get('/{event}', [ReservationController::class, 'detail'] )->name('events.detail');
 });
