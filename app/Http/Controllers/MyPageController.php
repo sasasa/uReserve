@@ -12,10 +12,14 @@ use Carbon\Carbon;
 
 class MyPageController extends Controller
 {
-    public function index(MyPageService $myPageService){
+    public function __construct(private MyPageService $myPageService)
+    {
+    }
+    
+    public function index(){
         $events = Auth::user()->events;
-        $fromTodayEvents = $myPageService->reservedEvent($events, 'fromToday');
-        $pastEvents = $myPageService->reservedEvent($events, 'past');
+        $fromTodayEvents = $this->myPageService->reservedEvent($events, 'fromToday');
+        $pastEvents = $this->myPageService->reservedEvent($events, 'past');
 
         return view('mypage/index', compact('fromTodayEvents', 'pastEvents'));
     }

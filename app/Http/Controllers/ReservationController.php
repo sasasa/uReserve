@@ -12,14 +12,18 @@ use App\Http\Requests\ReservationRequest;
 
 class ReservationController extends Controller
 {
+    public function __construct(private ReservationService $reservationService)
+    {
+    }
+    
     public function dashboard()
     {
         return view('dashboard');
     }
 
-    public function detail(Event $event, ReservationService $reservationService)
+    public function detail(Event $event)
     {
-        $resevablePeople = $reservationService->getResevablePeople($event);
+        $resevablePeople = $this->reservationService->getResevablePeople($event);
         $isReserved = Reservation::latestMine($event->id)->whereNull('canceled_date')->first();
         
         return view('event-detail', compact('event', 'resevablePeople', 'isReserved'));
