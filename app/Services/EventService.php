@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Event;
 use App\Models\Reservation;
+use Exception;
 
 class EventService
 {
@@ -20,7 +21,7 @@ class EventService
             'max_people' => $request['max_people'],
             'is_visible' => $request['is_visible'],
         ]);
-        return $model->save() ? $model : null;
+        return $model->save() ? $model : (throw new \Exception('db error'));
     }
     
     public function getWeekEvents($startDate, $endDate)

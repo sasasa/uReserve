@@ -7,6 +7,7 @@ use App\Services\EventService;
 use App\Models\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Carbon\Carbon;
+use Mockery;
 
 class EventServiceTest extends TestCase
 {
@@ -21,6 +22,31 @@ class EventServiceTest extends TestCase
         $this->service = new EventService();
     }
     
+    /**
+     * A basic unit test example.
+     * @test
+     * @runInSeparateProcess
+     * @return void
+     */
+    public function saveJoinDateAndTime_例外発生()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('db error');
+        // $mock = Mockery::mock('alias:'. Event::class);
+        $mock = Mockery::mock('overload:'. Event::class);
+        $mock->shouldReceive('fill')->once();
+        $mock->shouldReceive('save')->once()->andReturn(false);
+        $this->service->saveJoinDateAndTime([
+            'event_date' => '2022-03-12',
+            'start_time' => '12:00',
+            'end_time' => '13:00',
+            'event_name' => 'イベント名',
+            'information' => 'イベント情報',
+            'max_people' => 15,
+            'is_visible' => 1,
+        ]);
+    }
+
     /**
      * A basic unit test example.
      * @test
