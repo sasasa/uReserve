@@ -23,13 +23,15 @@
                             $eventInfo = $events->firstWhere('start_date', $currentWeek[$i]['checkDay'] . " " . \Constant::EVENT_TIME[$j] );
                             if($eventInfo) {
                                 $eventName = $eventInfo->name;
+                                $number_of_people = $eventInfo->number_of_people;
+                                $max_people = $eventInfo->max_people;
                                 $eventPeriod = \Carbon\Carbon::parse($eventInfo->start_date)->diffInMinutes($eventInfo->end_date) / 30 - 1;
                             }
                         @endphp
                         @if(!is_null($eventInfo))
                             <a href="{{ route('events.detail', ['event' => $eventInfo->id]) }}">
                                 <div class="py-1 px-2 h-8 border border-gray-200 text-xs bg-blue-100">
-                                    {{ $eventName }}
+                                    {{ $eventName }}&nbsp;{{ ($number_of_people ?? 0).'/'.$max_people }}
                                 </div>
                             </a>
                             @if( $eventPeriod > 0 )

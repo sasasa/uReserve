@@ -28,7 +28,7 @@ class EventService
     {
         $reservedPeople = DB::table('reservations')
         ->select('event_id', DB::raw('sum(number_of_people) as number_of_people'))
-        ->whereNotNull('canceled_date')
+        ->whereNull('canceled_date')
         ->groupBy('event_id');
 
         return DB::table('events')
