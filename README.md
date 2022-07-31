@@ -1,4 +1,5 @@
 <!--
+コメントを追加
 curl -s https://laravel.build/uReserve | bash 
 sail up -d
 sail artisan cache:clear
