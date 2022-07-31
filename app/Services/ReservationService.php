@@ -8,6 +8,10 @@ use App\Models\Reservation;
 
 class ReservationService
 {
+    /**
+     * @param Event $event
+     * @return int
+     */
     public function getResevablePeople(Event $event): int
     {
         $reservedPeople = Reservation::noneCanceleNumberOfPeople($event->id)->first();
@@ -19,7 +23,11 @@ class ReservationService
         }
         return $resevablePeople;
     }
-
+    /**
+     * @param Event $event
+     * @param int $add_number_people
+     * @return bool
+     */
     public function canReserve(Event $event, int $add_number_people): bool
     {
         $reservedPeople = Reservation::noneCanceleNumberOfPeople($event->id)->first();

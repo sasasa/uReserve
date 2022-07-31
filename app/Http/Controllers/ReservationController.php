@@ -36,7 +36,7 @@ class ReservationController extends Controller
             'event_id' => $event->id,
             'number_of_people' => $request->reserved_people,
         ]);
-        session()->flash('status', '登録OKです');
-        return to_route('dashboard');
+        // session()->flash('status', '登録OKです');
+        return to_route('dashboard')->with('status', '登録OKです');
     }
 }

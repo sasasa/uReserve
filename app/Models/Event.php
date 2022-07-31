@@ -18,6 +18,7 @@ class Event extends Model
 {
     use HasFactory;
 
+    /** @var string[] */
     protected $fillable = [
         'name',
         'information',
@@ -27,6 +28,7 @@ class Event extends Model
         'is_visible',
     ];
 
+    /** @var array<string, string> */
     protected $casts = [
         'start_date' => 'datetime:Y-m-d H:i:00',
         'end_date' => 'datetime:Y-m-d H:i:00',
@@ -50,57 +52,82 @@ class Event extends Model
         return $reservations;
     }
 
+    /**
+     * @return Illuminate\Database\Eloquent\Builder
+     */
     public function scopeWithNumberOfPeople($query)
     {
         $reservedPeople = Reservation::select('event_id', DB::raw('sum(number_of_people) as number_of_people'))
         ->whereNull('canceled_date')
         ->groupBy('event_id');
-    
         return $query->leftJoinSub($reservedPeople, 'reservedPeople', function($join){
             $join->on('events.id', '=', 'reservedPeople.event_id');
         });
     }
 
+    /**
+     * @return Illuminate\Database\Eloquent\Builder
+     */
     public function scopePast($query)
     {
         return $query->whereDate('start_date', '<', Carbon::today());
     }
 
+    /**
+     * @return Illuminate\Database\Eloquent\Builder
+     */
     public function scopeFuture($query)
     {
         return $query->whereDate('start_date', '>=' , Carbon::today());
     }
-
+    /**
+     * @return Attribute
+     */
     protected function editEventDate(): Attribute
     { 
         return new Attribute(
             get: fn () => Carbon::parse($this->start_date)->format('Y-m-d'),
         );
     }
+    /**
+     * @return Attribute
+     */
     protected function editStartTime(): Attribute
     { 
         return new Attribute(
             get: fn () => Carbon::parse($this->start_date)->format('H:i')
         );
     }
+    /**
+     * @return Attribute
+     */
     protected function editEndTime(): Attribute
     { 
         return new Attribute(
             get: fn() => Carbon::parse($this->end_date)->format('H:i')
         );
     }
+    /**
+     * @return Attribute
+     */
     protected function eventDate(): Attribute
     { 
         return new Attribute(
             get: fn() => Carbon::parse($this->start_date)->format('Y年m月d日'),
         );
     } 
+    /**
+     * @return Attribute
+     */
     protected function startTime(): Attribute
     { 
         return new Attribute(
             get: fn() => Carbon::parse($this->start_date)->format('H時i分')
         );
     }
+    /**
+     * @return Attribute
+     */
     protected function endTime(): Attribute
     { 
         return new Attribute(

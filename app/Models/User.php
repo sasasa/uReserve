@@ -11,6 +11,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Event;
 use App\Models\ReservedInfo;
+use Carbon\Carbon;
 class User extends Authenticatable
 {
     use HasApiTokens;
@@ -34,7 +35,7 @@ class User extends Authenticatable
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var string[]
      */
     protected $hidden = [
         // 'password',
@@ -46,7 +47,7 @@ class User extends Authenticatable
     /**
      * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
@@ -55,12 +56,15 @@ class User extends Authenticatable
     /**
      * The accessors to append to the model's array form.
      *
-     * @var array
+     * @var string[]
      */
     protected $appends = [
         'profile_photo_url',
     ];
 
+    /**
+     * @return Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function events()
     {
         return $this->belongsToMany(Event::class, 'reservations')->withPivot('id', 'number_of_people', 'canceled_date');
@@ -72,9 +76,9 @@ class User extends Authenticatable
     public function reservedInfo(): ReservedInfo
     {
         return new ReservedInfo(
-            $this->name,
-            $this->pivot->number_of_people,
-            $this->pivot->canceled_date,
+            name: $this->name,
+            number_of_people: $this->pivot->number_of_people,
+            canceled_date: $this->pivot->canceled_date ? new Carbon($this->pivot->canceled_date) : null,
         );
     }
 }

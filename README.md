@@ -9,7 +9,6 @@ sail php artisan migrate:refresh --seed
 全テーブル削除してup()を実行
 sail php artisan migrate:fresh --seed
 
-sail php artisan migrate:fresh --seed --database=mysql.test
 sail php artisan migrate:fresh --seed --env=testing
 
 自動JSビルド

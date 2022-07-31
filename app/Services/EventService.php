@@ -9,6 +9,18 @@ use Exception;
 
 class EventService
 {
+    /**
+     * @param array{
+     *   event_date: string,
+     *   start_time: string,
+     *   end_time: string,
+     *   event_name: string,
+     *   information: string,
+     *   max_people: int,
+     *   is_visible: int,
+     * } $request
+     * @param Event $model
+     */
     public function saveJoinDateAndTime(array $request, Event $model = new Event())
     {
         $startDate = $this->joinDateAndTime($request['event_date'], $request['start_time']);
@@ -24,6 +36,11 @@ class EventService
         return $model->save() ? $model : (throw new \Exception('db error'));
     }
     
+    /**
+     * @param string $startDate
+     * @param string $endDate
+     * @return Illuminate\Database\Eloquent\Collection<Event>
+     */
     public function getWeekEvents($startDate, $endDate)
     {
         $reservedPeople = DB::table('reservations')
@@ -31,8 +48,7 @@ class EventService
         ->whereNull('canceled_date')
         ->groupBy('event_id');
 
-        return DB::table('events')
-        ->leftJoinSub($reservedPeople, 'reservedPeople', function($join){
+        return Event::leftJoinSub($reservedPeople, 'reservedPeople', function($join){
             $join->on('events.id', '=', 'reservedPeople.event_id');
             })
         ->whereBetween('start_date', [$startDate, $endDate])
@@ -41,6 +57,9 @@ class EventService
         ->get();
     }
 
+    /**
+     * @return bool
+     */
     public function checkEditEventDuplication(int $id, $eventDate, $startTime, $endTime)
     {
         return  DB::table('events')
@@ -51,6 +70,9 @@ class EventService
             ->exists();
     }
 
+    /**
+     * @return bool
+     */
     public function checkEventDuplication($eventDate, $startTime, $endTime)
     {
         return DB::table('events')
@@ -60,6 +82,11 @@ class EventService
             ->exists();
     }
 
+    /**
+     * @param string $date
+     * @param string $time
+     * @return Carbon
+     */
     public function joinDateAndTime($date, $time)
     {
         $join = $date . " " . $time;

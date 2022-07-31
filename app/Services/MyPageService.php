@@ -5,10 +5,14 @@ use Carbon\Carbon;
 use InvalidArgumentException;
 use App\Models\EventInfo;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Collection as SupportCollection;
 class MyPageService
 {
-    public function reservedEvent(Collection $events, string $string): SupportCollection {
+    /**
+     * @param Illuminate\Database\Eloquent\Collection $events
+     * @param string $string
+     * @return Illuminate\Support\Collection
+     */
+    public function reservedEvent(Collection $events, string $string): \Illuminate\Support\Collection {
         $reservedEvents = collect();
         if($string === 'fromToday') { 
             foreach($events->sortBy('start_date') as $event) {

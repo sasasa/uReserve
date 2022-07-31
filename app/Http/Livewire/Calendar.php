@@ -9,8 +9,11 @@ use App\Services\EventService;
 
 class Calendar extends Component
 {
+    /** @var string */
     public $currentDate;
+    /** @var array<int, array{day: string, checkDay: string, dayOfWeek: string}> */
     public $currentWeek;
+    /** @var Illuminate\Database\Eloquent\Collection */
     public $events;
 
     public function getDate($date, EventService $eventService)

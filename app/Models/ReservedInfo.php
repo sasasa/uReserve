@@ -9,6 +9,6 @@ class ReservedInfo
     public function __construct(
         public string $name,
         public int $number_of_people,
-        public Carbon $canceled_date,
+        public ?Carbon $canceled_date,
     ) {}
 }

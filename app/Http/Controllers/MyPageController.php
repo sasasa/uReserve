@@ -36,7 +36,7 @@ class MyPageController extends Controller
         $reservation = Reservation::latestMine($event->id)->first();
         $reservation->canceled_date = Carbon::now()->format('Y-m-d H:i:s');
         $reservation->save();
-        session()->flash('status', 'キャンセルできました。');
-        return to_route('dashboard');
+        // session()->flash('status', 'キャンセルできました。');
+        return to_route('dashboard')->with('status', 'キャンセルできました。');
     }
 }

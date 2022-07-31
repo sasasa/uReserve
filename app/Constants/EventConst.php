@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace App\Constants;
 class EventConst
 {
+    /** @var string[] */
     const EVENT_TIME = [
         '10:00:00',//0
         '10:30:00',//1
@@ -26,4 +27,4 @@ class EventConst
         '19:30:00',//19
         '20:00:00',//20
     ];
-} 
+}

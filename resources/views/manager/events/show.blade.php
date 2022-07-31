@@ -68,6 +68,7 @@
           </div>
       </div>
   </div>
+  @if ($event->users->isNotEmpty() && !$reservations->every(fn($v, $k) => $v->canceled_date) )
   <div class="py-4">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -99,6 +100,8 @@
         </div>
     </div>
   </div>
+  @endif
+  
   <script src="{{ mix("js/flatpickr.js")}}">
   </script>
 </x-app-layout>
