@@ -6,6 +6,7 @@ use App\Http\Controllers\AlpineTestController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\MyPageController;
+use App\Http\Controllers\SampleController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,6 +39,8 @@ Route::controller(LivewireTestController::class)->prefix('livewire-test')->name(
     Route::get('register', "register")->name('register');
 });
 Route::get('alpine-test/index', [AlpineTestController::class, 'index']); 
+
+Route::get('sample', [SampleController::class, 'index']); 
 
 
 Route::prefix('manager')->middleware(['auth', 'can:manager-higher'])->group(function(){
