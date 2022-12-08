@@ -37,6 +37,10 @@ class Sample extends Component
     public function updatedStreet()
     {
         $this->block = "";
+        if($this->prefecture && $this->city && $this->street) {
+            $p = Place::where('prefecture', $this->prefecture)->where('city', $this->city)->where('street', $this->street)->select('postal_code', 'prefecture', 'city', 'street')->first();
+            $this->postalCode = $p?->postal_code;
+        }
     }
 
     public function updatedPostalCode()
