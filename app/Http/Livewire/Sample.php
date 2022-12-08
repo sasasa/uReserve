@@ -79,6 +79,7 @@ class Sample extends Component
         // $this->resetPage();
         $this->photo = null;
         $this->alt = "";
+        usleep(1400000);
         session()->flash("message", "画像を登録しました");
     }
 
