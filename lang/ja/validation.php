@@ -146,6 +146,13 @@ return [
         'start_time' => '開始時間',
         'max_people' => '定員',
         'is_visible' => '表示非表示',
+
+        'postalCode' => '郵便番号',
+        'prefecture' => '都道府県',
+        'city' => '市区町村',
+        'street' => '地区名',
+        'block' => '番地',
+        'lat' => '緯度',
         
     ],
 ];

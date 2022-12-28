@@ -40,7 +40,9 @@ Route::controller(LivewireTestController::class)->prefix('livewire-test')->name(
 });
 Route::get('alpine-test/index', [AlpineTestController::class, 'index']); 
 
-Route::get('sample', [SampleController::class, 'index']); 
+Route::get('sample', [SampleController::class, 'index'])->name('sample'); 
+Route::get('sample2', [SampleController::class, 'sample2'])->name('sample2'); 
+Route::post('sample2', [SampleController::class, 'sample2'])->name('sample2'); 
 
 
 Route::prefix('manager')->middleware(['auth', 'can:manager-higher'])->group(function(){

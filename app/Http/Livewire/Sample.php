@@ -23,6 +23,23 @@ class Sample extends Component
     public string $street = "";
     public string $block = "";
 
+    public $lat;
+    public $lng;
+
+    public bool $is_button_disabled = true;
+
+    public function mount()
+    {
+        $this->postalCode = session('postalCode');
+        $this->prefecture = session('prefecture');
+        $this->city = session('city');
+        $this->street = session('street');
+        $this->block = session('block');
+        $this->lat = session('lat');
+        $this->lng = session('lng');
+        $this->is_button_disabled = $this->postalCode && $this->prefecture && $this->city && $this->street && $this->block ? false : true;
+    }
+
     public function updatedPrefecture()
     {
         $this->city = "";
@@ -41,6 +58,10 @@ class Sample extends Component
             $p = Place::where('prefecture', $this->prefecture)->where('city', $this->city)->where('street', $this->street)->select('postal_code', 'prefecture', 'city', 'street')->first();
             $this->postalCode = $p?->postal_code;
         }
+    }
+    public function updatedBlock()
+    {
+        $this->is_button_disabled = $this->postalCode && $this->prefecture && $this->city && $this->street && $this->block ? false : true;
     }
 
     public function updatedPostalCode()
@@ -68,6 +89,32 @@ class Sample extends Component
             $this->street = "";
             $this->block = "";
         }
+    }
+
+    public function search()
+    {
+        // dd('search');
+        $this->dispatchBrowserEvent('inputFill');
+        $this->validate([
+            'postalCode' => ['required', 'max:50',],
+            'prefecture' => ['required', 'max:50',],
+            'city' => ['required', 'max:255',],
+            'street' => ['required', 'max:255',],
+            'block' => ['required', 'max:255',],
+            'lat' => ['required', ],
+        ], [
+            'lat.required' => 'GoogleMap上をクリックしてください',
+        ]);
+        session([
+            'postalCode' => $this->postalCode,
+            'prefecture' => $this->prefecture,
+            'city' => $this->city,
+            'street' => $this->street,
+            'block' => $this->block,
+            'lat' => $this->lat,
+            'lng' => $this->lng,
+        ]);
+        return redirect()->route('sample2');
     }
 
     public function save()

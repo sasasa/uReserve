@@ -10,4 +10,12 @@ class SampleController extends Controller
     {
         return view('sample.index');
     }
+
+    public function sample2(Request $request)
+    {
+        if($request->isMethod('post')){
+            dd(session('lat'));
+        }
+        return view('sample.sample2');
+    }
 }

@@ -1,3 +1,6 @@
 <x-layouts.sample title="livewire">
-@livewire("sample")
+  <x-slot name="hige">
+    hogehoge
+  </x-slot>
+  @livewire("sample")
 </x-layouts.sample>
