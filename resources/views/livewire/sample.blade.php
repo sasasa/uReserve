@@ -10,8 +10,8 @@
 
 
     <div id="target"></div>
-    <form wire:submit.prevent="search">
-
+    <form wire:submit.prevent="confirm">
+        @error('mapImage') <div class="error">{{ $message }}</div> @enderror
 
         <input type="hidden" id="lat" wire:model="lat">
         <input type="hidden" id="lng" wire:model="lng">
@@ -37,17 +37,17 @@
         </select>
         @error('city') <div class="error">{{ $message }}</div> @enderror
         
-        <select name="street" id="street" wire:model="street">
+        <select name="street" id="street">
             <option value="">選択してください</option>
             @foreach ($streets as $place)
                 @if(!empty($place->street))
-                    <option value="{{ $place->street }}">{{ $place->street }}</option>
+                    <option @selected(session('street', $street) == $place->street) value="{{ $place->street }}">{{ $place->street }}</option>
                 @endif
             @endforeach
         </select>
         @error('street') <div class="error">{{ $message }}</div> @enderror
 
-        <input type="text" list="block" id="block_info" wire:model="block">
+        <input type="text" list="block" id="block_info" value="{{ session('block') }}">
         <datalist name="block" id="block">
             <option value="">選択してください</option>
             @foreach ($blocks as $place)
@@ -59,7 +59,7 @@
         @error('block') <div class="error">{{ $message }}</div> @enderror
 
         <div>
-            <button @disabled($is_button_disabled) onclick="setLat()" wire:target="search" wire:loading.attr="disabled" type="submit" class='inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition'>Save</button>
+            <button onclick="setData()" wire:target="search" wire:loading.attr="disabled" type="submit" class='inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition'>Save</button>
         </div>
     </form>
     
@@ -98,6 +98,9 @@
         @endforelse
         </div>
     </div> --}}
+    <div>
+        <img src="" id="ss" alt="">
+    </div>
 <style>
 #target {
     width: 550px;
@@ -106,23 +109,93 @@
 </style>
 <script async defer src="https://maps.googleapis.com/maps/api/js?language=ja&region=JP&key={{ env('GOOGLE_MAP_API_KEY') }}&callback=initMap"></script>
 <script>
-    //イベント発火時に実行
-    window.addEventListener('inputFill', function () {
+    let mapImage = "";
+    function map2image() {
+        setTimeout(() => {
+            html2canvas(document.getElementById('target'), {
+                useCORS: true,
+            }).then(function (canvas) {
+                mapImage = canvas.toDataURL();
+            });
+        }, 200);
+    }
+    function dispatchEventToBlockInfo() {
         const ev = new Event("change", {
             bubbles: false,
             cancelable: true
         })
         document.getElementById('block_info').dispatchEvent(ev);
+    }
+    document.addEventListener('inputFill', function () {
+        getMapByAddress()
     });
-    function setLat() {
+    document.getElementById('street').addEventListener('change',function(){
+        getMapByAddress()
+    })
+    document.getElementById('block_info').addEventListener('change',function(){
+        getMapByAddress()
+    })
+
+    function setData() {
         @this.set('lat', document.getElementById('lat').value);
         @this.set('lng', document.getElementById('lng').value);
+        @this.set('street', document.getElementById('street').value);
+        @this.set('block', document.getElementById('block_info').value);
+        @this.set('mapImage', mapImage);
+    }
+    const target = document.getElementById('target');
+    let map = null;
+    let marker = [];
+    function getMapByAddress() {
+        let geocoder = new google.maps.Geocoder();
+        // Geocoding Address->Latlng
+        const address = document.getElementById('prefecture').value +
+                document.getElementById('city').value +
+                document.getElementById('street').value +
+                document.getElementById('block').value
+
+        geocoder.geocode({
+            address: address
+        }, 
+        function(results, status) {
+            if(status !== "OK") {
+                alert('Mapを取得できません:' + status);
+                return;
+            }
+            if(results[0]) {
+                marker.forEach(function(m){
+                    m.setMap(null);
+                });
+                marker = [];
+                document.getElementById('lat').value = ""
+                document.getElementById('lng').value = ""
+
+                const location = results[0].geometry.location;
+                map = new google.maps.Map(target, {
+                    center: location,
+                    zoom: 18,
+                    disableDefaultUI: true,
+                });
+
+                map.addListener('click', function(e){
+                    document.getElementById('lat').value = e.latLng.lat()
+                    document.getElementById('lng').value = e.latLng.lng()
+                    this.panTo(e.latLng);
+                    marker.push(new google.maps.Marker({
+                        position: e.latLng,
+                        map: map,
+                        title: e.latLng.toString(),
+                        animation: google.maps.Animation.DROP,
+                    }));
+                    map2image()
+                });
+            } else {
+                alert('Mapを取得できません:' + results);
+                return;
+            }
+        });
     }
     function initMap() {
-        const target = document.getElementById('target');
-        let map;
-        let marker = [];
-
         @if(session('lat'))
             let center = { lat: {{ session('lat') }}, lng: {{ session('lng') }} };
 
@@ -137,6 +210,7 @@
                 map: map,
                 animation: google.maps.Animation.DROP,
             }));
+            map2image()
             map.addListener('click', function(e){
                 marker.forEach(function(m){
                     m.setMap(null);
@@ -150,56 +224,23 @@
                     title: e.latLng.toString(),
                     animation: google.maps.Animation.DROP,
                 }));
+                map2image()
             });
         @endif
-
-        let geocoder = new google.maps.Geocoder();
-        // document.addEventListener('livewire:load', function () {
-            document.getElementById('block_info').addEventListener('change',function(){
-                // Geocoding Address->Latlng
-                const address = '〒' + document.getElementById('postalCode').value + ' '
-                        document.getElementById('prefecture').value +
-                        document.getElementById('city').value +
-                        document.getElementById('street').value +
-                        document.getElementById('block').value
-
-                geocoder.geocode({
-                    address: address
-                }, 
-                function(results, status) {
-                    if(status !== "OK") {
-                        alert('Mapを取得できません:' + status);
-                        return;
-                    }
-                    if(results[0]) {
-                        const location = results[0].geometry.location;
-                        map = new google.maps.Map(target, {
-                            center: location,
-                            zoom: 18,
-                            disableDefaultUI: true,
-                        });
-
-                        map.addListener('click', function(e){
-                            marker.forEach(function(m){
-                                m.setMap(null);
-                            });
-                            document.getElementById('lat').value = e.latLng.lat()
-                            document.getElementById('lng').value = e.latLng.lng()
-                            this.panTo(e.latLng);
-                            marker.push(new google.maps.Marker({
-                                position: e.latLng,
-                                map: map,
-                                title: e.latLng.toString(),
-                                animation: google.maps.Animation.DROP,
-                            }));
-                        });
-                    } else {
-                        alert('Mapを取得できません:' + results);
-                        return;
-                    }
-                });
-            })
-        // });
     }
+
+    // document.addEventListener('livewire:load', function() {
+    //     function displayMapIfItIsInVariousValues() {
+    //         if (!map && @this.postalCode && @this.prefecture && @this.city && @this.street && @this.block) {
+    //             getMapByAddress();
+    //         } else {
+    //             map = null;
+    //         }
+    //         setTimeout(() => {
+    //             displayMapIfItIsInVariousValues()
+    //         },  330);
+    //     }
+    //     displayMapIfItIsInVariousValues()
+    // })
 </script>
 </div>

@@ -9,6 +9,7 @@ use Livewire\WithPagination;
 use App\Models\Image;
 use App\Models\Place;
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\Facades\Image as ImageIntervention;
 
 class Sample extends Component
 {
@@ -23,37 +24,47 @@ class Sample extends Component
     public string $street = "";
     public string $block = "";
 
-    public $lat;
-    public $lng;
+    public string $lat = "";
+    public string $lng = "";
+    public string $mapImage = "";
 
     public bool $is_button_disabled = true;
 
     public function mount()
     {
-        $this->postalCode = session('postalCode');
-        $this->prefecture = session('prefecture');
-        $this->city = session('city');
-        $this->street = session('street');
-        $this->block = session('block');
-        $this->lat = session('lat');
-        $this->lng = session('lng');
+        $this->postalCode = session('postalCode', '');
+        $this->prefecture = session('prefecture', '');
+        $this->city = session('city', '');
+        $this->street = session('street', '');
+        $this->block = session('block', '');
+        $this->lat = session('lat', '');
+        $this->lng = session('lng', '');
+        $this->mapImage = session('mapImage', '');
         $this->is_button_disabled = $this->postalCode && $this->prefecture && $this->city && $this->street && $this->block ? false : true;
     }
-
     public function updatedPrefecture()
     {
         $this->city = "";
         $this->street = "";
         $this->block = "";
+        $this->lat = "";
+        $this->lng = "";
+        $this->mapImage = "";
     }
     public function updatedCity()
     {
         $this->street = "";
         $this->block = "";
+        $this->lat = "";
+        $this->lng = "";
+        $this->mapImage = "";
     }
     public function updatedStreet()
     {
         $this->block = "";
+        // $this->lat = "";
+        // $this->lng = "";
+        // $this->mapImage = "";
         if($this->prefecture && $this->city && $this->street) {
             $p = Place::where('prefecture', $this->prefecture)->where('city', $this->city)->where('street', $this->street)->select('postal_code', 'prefecture', 'city', 'street')->first();
             $this->postalCode = $p?->postal_code;
@@ -74,6 +85,9 @@ class Sample extends Component
                 $this->prefecture = $place->prefecture;
                 $this->city = $place->city;
                 $this->street = $place->street;
+                $this->lat = "";
+                $this->lng = "";
+                $this->mapImage = "";
                 if($places->count() == 1) {
                     $this->block = $place->block ?? "";
                 }
@@ -82,16 +96,22 @@ class Sample extends Component
                 $this->city = "";
                 $this->street = "";
                 $this->block = "";
+                $this->lat = "";
+                $this->lng = "";
+                $this->mapImage = "";
             }
         } else {
             $this->prefecture = "";
             $this->city = "";
             $this->street = "";
             $this->block = "";
+            $this->lat = "";
+            $this->lng = "";
+            $this->mapImage = "";
         }
     }
 
-    public function search()
+    public function confirm()
     {
         // dd('search');
         $this->dispatchBrowserEvent('inputFill');
@@ -102,9 +122,11 @@ class Sample extends Component
             'street' => ['required', 'max:255',],
             'block' => ['required', 'max:255',],
             'lat' => ['required', ],
+            'mapImage' => ['required', ],
         ], [
-            'lat.required' => 'GoogleMap上をクリックしてください',
+            'lat.required' => 'GoogleMap上の自宅の場所をクリックしてください',
         ]);
+
         session([
             'postalCode' => $this->postalCode,
             'prefecture' => $this->prefecture,
@@ -114,6 +136,21 @@ class Sample extends Component
             'lat' => $this->lat,
             'lng' => $this->lng,
         ]);
+
+        $path = storage_path(session('lat')."-".session('lng'). '.jpg');
+        if(file_exists($path)) {
+            $mapImage = ImageIntervention::make($path);
+        } else {
+            $mapImage = ImageIntervention::make($this->mapImage);
+        }
+        $circle = ImageIntervention::make(public_path('images/circle.png'));
+        $circle->widen(30);
+        $position = 'center';
+        $x = 0;
+        $y = 0;
+        $mapImage->insert($circle, $position, $x, $y);
+        $mapImage->save(storage_path(session('lat')."-".session('lng'). '.jpg'));
+
         return redirect()->route('sample2');
     }
 
