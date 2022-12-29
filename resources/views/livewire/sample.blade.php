@@ -147,6 +147,14 @@
     let map = null;
     let marker = [];
     function getMapByAddress() {
+        if(document.getElementById('prefecture').value == "" ||
+            document.getElementById('city').value == "" ||
+            document.getElementById('street').value == "" ||
+            document.getElementById('block').value == "") 
+        {
+            return;
+        }
+
         let geocoder = new google.maps.Geocoder();
         // Geocoding Address->Latlng
         const address = document.getElementById('prefecture').value +
