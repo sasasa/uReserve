@@ -84,6 +84,7 @@ class Sample extends Component
             if($place) {
                 $this->prefecture = $place->prefecture;
                 $this->city = $place->city;
+                session()->forget('street');
                 $this->street = $place->street;
                 $this->lat = "";
                 $this->lng = "";
@@ -91,6 +92,7 @@ class Sample extends Component
                 if($places->count() == 1) {
                     $this->block = $place->block ?? "";
                 }
+                $this->dispatchBrowserEvent('mapShow');
             } else {
                 $this->prefecture = "";
                 $this->city = "";
@@ -114,7 +116,7 @@ class Sample extends Component
     public function confirm()
     {
         // dd('search');
-        $this->dispatchBrowserEvent('inputFill');
+        $this->dispatchBrowserEvent('mapShow');
         $this->validate([
             'postalCode' => ['required', 'max:50',],
             'prefecture' => ['required', 'max:50',],
@@ -122,7 +124,7 @@ class Sample extends Component
             'street' => ['required', 'max:255',],
             'block' => ['required', 'max:255',],
             'lat' => ['required', ],
-            'mapImage' => ['required', ],
+            // 'mapImage' => ['required', ],
         ], [
             'lat.required' => 'GoogleMap上の自宅の場所をクリックしてください',
         ]);
@@ -140,6 +142,7 @@ class Sample extends Component
         $path = storage_path(session('lat')."-".session('lng'). '.jpg');
         if(file_exists($path)) {
             $mapImage = ImageIntervention::make($path);
+            return redirect()->route('sample2');
         } else {
             $mapImage = ImageIntervention::make($this->mapImage);
         }

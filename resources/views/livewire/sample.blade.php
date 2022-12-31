@@ -126,7 +126,7 @@
         })
         document.getElementById('block_info').dispatchEvent(ev);
     }
-    document.addEventListener('inputFill', function () {
+    document.addEventListener('mapShow', function () {
         getMapByAddress()
     });
     document.getElementById('street').addEventListener('change',function(){
@@ -150,7 +150,7 @@
         if(document.getElementById('prefecture').value == "" ||
             document.getElementById('city').value == "" ||
             document.getElementById('street').value == "" ||
-            document.getElementById('block').value == "") 
+            document.getElementById('block_info').value == "") 
         {
             return;
         }
@@ -171,10 +171,6 @@
                 return;
             }
             if(results[0]) {
-                marker.forEach(function(m){
-                    m.setMap(null);
-                });
-                marker = [];
                 document.getElementById('lat').value = ""
                 document.getElementById('lng').value = ""
 
@@ -185,7 +181,11 @@
                     disableDefaultUI: true,
                 });
 
-                map.addListener('click', function(e){
+                map.addListener('click', function(e) {
+                    marker.forEach(function(m) {
+                        m.setMap(null);
+                    });
+                    marker = [];
                     document.getElementById('lat').value = e.latLng.lat()
                     document.getElementById('lng').value = e.latLng.lng()
                     this.panTo(e.latLng);
@@ -219,10 +219,11 @@
                 animation: google.maps.Animation.DROP,
             }));
             map2image()
-            map.addListener('click', function(e){
-                marker.forEach(function(m){
+            map.addListener('click', function(e) {
+                marker.forEach(function(m) {
                     m.setMap(null);
                 });
+                marker = [];
                 document.getElementById('lat').value = e.latLng.lat()
                 document.getElementById('lng').value = e.latLng.lng()
                 this.panTo(e.latLng);
