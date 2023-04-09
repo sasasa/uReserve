@@ -43,6 +43,10 @@ Route::get('alpine-test/index', [AlpineTestController::class, 'index']);
 Route::get('sample', [SampleController::class, 'index'])->name('sample'); 
 Route::get('sample2', [SampleController::class, 'sample2'])->name('sample2'); 
 Route::post('sample2', [SampleController::class, 'sample2'])->name('sample2'); 
+Route::get('sample3', [SampleController::class, 'sample3'])->name('sample3');
+Route::post('sample/cities', [SampleController::class, 'cities'])->name('cities');
+Route::post('sample/streets', [SampleController::class, 'streets'])->name('streets');
+Route::post('sample/address', [SampleController::class, 'address'])->name('address');
 
 
 Route::prefix('manager')->middleware(['auth', 'can:manager-higher'])->group(function(){

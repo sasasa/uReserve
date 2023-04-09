@@ -23,6 +23,7 @@ class Sample extends Component
     public string $city = "";
     public string $street = "";
     public string $block = "";
+    public array $places = [];
 
     public string $lat = "";
     public string $lng = "";
@@ -67,7 +68,7 @@ class Sample extends Component
         // $this->mapImage = "";
         if($this->prefecture && $this->city && $this->street) {
             $p = Place::where('prefecture', $this->prefecture)->where('city', $this->city)->where('street', $this->street)->select('postal_code', 'prefecture', 'city', 'street')->first();
-            $this->postalCode = $p?->postal_code;
+            // $this->postalCode = $p?->postal_code;
         }
     }
     public function updatedBlock()
@@ -75,11 +76,35 @@ class Sample extends Component
         $this->is_button_disabled = $this->postalCode && $this->prefecture && $this->city && $this->street && $this->block ? false : true;
     }
 
+    public function setPlace($postal_code, $prefecture, $city, $street)
+    {
+        $this->postalCode = $postal_code;
+        $this->prefecture = $prefecture;
+        $this->city = $city;
+        $this->street = $street;
+        $this->block = "";
+        $this->lat = "";
+        $this->lng = "";
+        $this->mapImage = "";
+        $this->dispatchBrowserEvent('mapShow');
+    }
+
     public function updatedPostalCode()
     {
         $this->postalCode = preg_replace('/[^0-9]/', '', mb_convert_kana($this->postalCode, 'a', 'UTF-8'));
         if (preg_match("/^\d{3}\d{4}$/", $this->postalCode)) {
-            $places = Place::where('postal_code', $this->postalCode)->select('prefecture', 'city', 'street')->get();
+            $places = Place::where('postal_code', $this->postalCode)->select('postal_code', 'prefecture', 'city', 'street')->get();
+            if($places->count() > 1) {
+                $this->places = $places->toArray();
+                $this->prefecture = "";
+                $this->city = "";
+                $this->street = "";
+                $this->block = "";
+                $this->lat = "";
+                $this->lng = "";
+                $this->mapImage = "";
+                return;
+            }
             $place = $places->first();
             if($place) {
                 $this->prefecture = $place->prefecture;
@@ -122,9 +147,10 @@ class Sample extends Component
             'prefecture' => ['required', 'max:50',],
             'city' => ['required', 'max:255',],
             'street' => ['required', 'max:255',],
-            'block' => ['required', 'max:255',],
+            'block' => ['nullable', 'max:255',],
             'lat' => ['required', ],
-            // 'mapImage' => ['required', ],
+            'lng' => ['required', ],
+            'mapImage' => ['required', ],
         ], [
             'lat.required' => 'GoogleMap上の自宅の場所をクリックしてください',
         ]);
@@ -144,6 +170,7 @@ class Sample extends Component
             $mapImage = ImageIntervention::make($path);
             return redirect()->route('sample2');
         } else {
+            // dd($this->mapImage);
             $mapImage = ImageIntervention::make($this->mapImage);
         }
         $circle = ImageIntervention::make(public_path('images/circle.png'));

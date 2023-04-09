@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('prefecture')->index()->comment('都道府県');
             $table->string('city')->index()->comment('市町村');
             $table->string('street')->index()->comment('町域');
-            $table->string('block')->index()->comment('丁目');
+            $table->string('block')->nullable()->comment('丁目');
             $table->timestamps();
         });
     }
