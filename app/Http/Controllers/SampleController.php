@@ -32,6 +32,15 @@ class SampleController extends Controller
         return response()->json($streets);
     }
 
+    public function sample4()
+    {
+        // $places = Place::where('postal_code', '1400001')->get();
+        $places = Place::where('postal_code', '4520961')->get();
+        return view('sample.sample4', [
+            'places' => $places,
+        ]);
+    }
+
     public function sample3()
     {
         return view('sample.sample3', [

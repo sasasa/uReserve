@@ -1,8 +1,40 @@
 <x-layouts.sample title="確認画面">
+<style>
+  #modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+}
+
+</style>
 <div>
-  〒<input type="text" name="postal" id="postal">
-  <ul id="address_list">
-  </ul>
+  〒<input maxlength="7" 
+  oninput="value = value.replace(/[^0-9]+/i,'');"
+  type="text" name="postal" id="postal">
+  <button type="button" id="modal-open">郵便番号から住所を取得</button>
+  <div id="modal">
+    <div id="modal-content">
+      <h2>住所選択</h2>
+      <p>郵便番号に対して複数の住所が該当します</p>
+      <ul id="address_list" class="modal">
+      </ul>
+    </div>
+  </div>
   <br>
 
   <select name="prefecture" id="prefecture">
@@ -31,9 +63,22 @@
         street_set = street;
         pref.dispatchEvent(new Event('change'));
     }
+    const modal = document.getElementById('modal');
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
 
     const postal = document.getElementById('postal');
-    postal.addEventListener('change', function() {
+    const modal_open = document.getElementById('modal-open');
+    
+    // 変更されたら発生するイベント
+    modal_open.addEventListener('click', function() {
+      // 7桁の数字の正規表現じゃなかったら処理を終了
+      if(!postal.value.match(/^\d{7}$/)) {
+        return;
+      }
       axios.post('{{ route('address') }}', {
           postal: postal.value
       }).then(function(response) {
@@ -51,18 +96,28 @@
             setAddress(place['prefecture'], place['city'], place['street'])
           });
         } else {
+          const modal = document.getElementById('modal');
+          modal.style.display = 'block';
           const address_list = document.getElementById('address_list');
           response.data.forEach(function(place) {
             const li = document.createElement('li');
-            li.innerHTML = place['prefecture'] + place['city'] + place['street'];
+            const label = document.createElement('label');
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.name = 'place';
+            input.value = place['prefecture'] + place['city'] + place['street'];
+            label.appendChild(input);
+            label.appendChild(document.createTextNode(place['prefecture'] + place['city'] + place['street']));
+            li.appendChild(label);
             address_list.appendChild(li);
-            li.addEventListener('click', function() {
+            input.addEventListener('change', function() {
               setAddress(place['prefecture'], place['city'], place['street'])
+              modal.style.display = 'none';
             });
           });
         }
       }).catch(function(error) {
-        console.log(error);
+        // console.log(error);
       });
     });
 
@@ -71,7 +126,7 @@
       axios.post('{{ route('cities') }}', {
           prefecture: prefecture.value
       }).then(function(response) {
-        console.log(response.data);
+        // console.log(response.data);
         const street = document.getElementById('street');
         street.innerHTML = '';
         const opt = document.createElement('option');
@@ -97,7 +152,7 @@
           city.dispatchEvent(new Event('change'));
         }
       }).catch(function(error) {
-        console.log(error);
+        // console.log(error);
       });
     });
 
@@ -107,7 +162,7 @@
           prefecture: prefecture.value,
           city: city.value
       }).then(function(response) {
-        console.log(response.data);
+        // console.log(response.data);
         const street = document.getElementById('street');
         street.innerHTML = '';
         const option = document.createElement('option');
@@ -125,7 +180,7 @@
           street_set = "";
         }
       }).catch(function(error) {
-        console.log(error);
+        // console.log(error);
       });
     });
   </script>
