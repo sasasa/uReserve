@@ -109,7 +109,7 @@
     let markers = [];
 
     function showMap() {
-        if(document.getElementById('prefecture').value) {
+        if(document.getElementById('prefecture').value && document.getElementById('city').value && document.getElementById('street').value) {
             getMapByAddress()
         } else {
             showModal()
