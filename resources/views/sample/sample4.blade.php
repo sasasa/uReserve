@@ -162,7 +162,10 @@
                 map = new google.maps.Map(target, {
                     center: location,
                     zoom: 18,
-                    disableDefaultUI: true,
+                    scaleControl: true,
+                    fullscreenControl: false,
+                    streetViewControl: false,
+                    disableDefaultUI: false,
                     scrollwheel: false,
                     disableDoubleClickZoom: true,
                 });
