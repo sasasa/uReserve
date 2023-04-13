@@ -163,6 +163,7 @@
                     center: location,
                     zoom: 18,
                     scaleControl: true,
+                    mapTypeControl: false,
                     fullscreenControl: false,
                     streetViewControl: false,
                     disableDefaultUI: false,
